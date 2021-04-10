@@ -1,13 +1,26 @@
 library(assertthat)
+library(dplyr)
 
-# Calculate the population for every district for 2021 and name the new column einwohner_2021. The yearly increasing rate is 1.1%. Note: the data is based on a survey from 2019.
+# Calculate the population for every district for 2021 and name the new column einwohner_2021. The yearly increasing rate is 1.011%. Note: the data is based on a survey from 2019.
 # * Store the result in the object hamburg_2021
 # * Round the population for 2021
-# * Calculate the difference in population between 2019 and 2020 and name the new column differenz
+# * Calculate the difference in population between 2019 and 2021 and name the new column differenz
 # * Filter for all districts with a population increase of more than 5000 people
 # * Select bezirk and differenz
 # * Arrange the output in descending order.
 # * Calculate the sum of people who moved to Hamburg between 2019 and 2021 and store the result in the object hamburg_pop_increase and name the column differenz_sum
+
+bezirk<-c("Hamburg-Mitte", "Altona", "Eimsbuettel", "Hamburg-Nord", "Wandsbek", "Bergedorf", "Harburg")
+einwohner <- c(301543, 275264, 267051, 314593, 441012, 130260, 169426)  
+hamburg <- data.frame(bezirk, einwohner)
+
+hamburg_2021 <- hamburg %>% 
+  mutate(einwohner_2021 =round(einwohner*1.011^2)) %>% 
+  mutate(differenz =(einwohner_2021 - einwohner)) %>% 
+  filter(differenz > 5000) %>% 
+  select(bezirk, differenz) %>% 
+  arrange(desc(differenz))
+
 
 if(
   assert_that(
@@ -33,3 +46,4 @@ if(
 ) {
   writeLines("Congrats! 10/10 points!")
 }
+
